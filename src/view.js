@@ -6,28 +6,27 @@ const clear = (elements) => {
   feedback.classList.remove('text-success');
   input.classList.remove('is-invalid');
 };
-const render = (state, elements) => {
+const renderForm = (state, elements, i18n) => {
   const { feedback, input } = elements;
-  feedback.textContent = state.message;
-  if (state.status === 'success') {
+  const { status, message } = state;
+  feedback.textContent = i18n.t(`messages.${message}`);
+  if (status === 'success') {
     clear(elements);
     feedback.classList.add('text-success');
     input.value = '';
     input.focus();
   }
-  if (state.status === 'failed') {
+  if (status === 'failed') {
     clear(elements);
     feedback.classList.add('text-danger');
     input.classList.add('is-invalid');
   }
 };
-const watch = (state, elements) =>
+const watch = (state, elements, i18n) =>
   onChange(state, (path, value) => {
-    console.log(elements);
     switch (path) {
       case 'form':
-        console.log(value);
-        render(value, elements);
+        renderForm(value, elements, i18n);
         break;
       default:
         console.log('Default');
