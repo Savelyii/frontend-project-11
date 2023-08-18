@@ -1,2 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import globalFunction from './app';
+import app from './app';
+
+app();

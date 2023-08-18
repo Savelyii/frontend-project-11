@@ -1,11 +1,9 @@
 import * as yup from 'yup';
-import watch from './view';
+import axios from 'axios';
 import i18next from 'i18next';
+import watch from './view';
 import ru from './locales/ru.js';
-
-// const globalFunction = () => {
-//   console.log('Start!');
-// };
+import parserRss from './parser';
 
 const i18nextInstance = i18next.createInstance();
 i18nextInstance.init({
@@ -15,7 +13,6 @@ i18nextInstance.init({
     ru,
   },
 });
-console.log(i18nextInstance.t('title'));
 const validate = (url, urls) => yup.string().required().url('invalidUrl').notOneOf(urls, 'existsUrl').validate(url, urls);
 
 const state = {
@@ -24,30 +21,39 @@ const state = {
     message: '',
   },
   urls: [],
+  feeds: [],
+  posts: [],
 };
 
 const elements = {
   form: document.querySelector('form'),
   feedback: document.querySelector('.feedback'),
   input: document.querySelector('.form-control'),
+  feedsContainer: document.querySelector('.feeds'),
+  postsContainer: document.querySelector('.posts'),
 };
 const watchedState = watch(state, elements, i18nextInstance);
-elements.form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const { value } = elements.input;
-  validate(value, watchedState.urls)
-    .then((url) => {
-      watchedState.form = { status: 'success', message: 'success' };
-      watchedState.urls.push(url);
-      return url;
-    })
-    // .then((url) => {
-    //   axios;
-    // })
-    .catch((err) => {
-      watchedState.form = { status: 'failed', message: err.message };
-      console.log(i18nextInstance.t('title'));
-    });
-});
-
-// export default globalFunction;
+const app = () => {
+  elements.form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const { value } = elements.input;
+    validate(value, watchedState.urls)
+      .then((url) => {
+        watchedState.form = { status: 'success', message: 'success' };
+        watchedState.urls.push(url);
+        return url;
+      })
+      .then((url) => {
+        return axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${url}`)}`);
+      })
+      .then((res) => {
+        const { feed, posts } = parserRss(res);
+        watchedState.feeds.push(feed);
+        watchedState.posts.push(...posts);
+      })
+      .catch((err) => {
+        watchedState.form = { status: 'failed', message: err.message };
+      });
+  });
+};
+export default app;
