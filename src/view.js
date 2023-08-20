@@ -22,32 +22,43 @@ const renderForm = (state, elements, i18n) => {
     input.classList.add('is-invalid');
   }
 };
+
 const renderFeeds = (feeds, elements, i18n) => {
   const feedsElements = feeds.map((feed) => {
+    elements.feedTitle.textContent = i18n.t('feedTitle');
+
     const titleEl = document.createElement('h3');
+    titleEl.classList.add('h6', 'm-0');
     titleEl.textContent = feed.title;
     const descriptionEl = document.createElement('p');
+    descriptionEl.classList.add('m-0', 'small', 'text-black-50');
     descriptionEl.textContent = feed.description;
-    const feedEl = document.createElement('div');
+    const feedEl = document.createElement('li');
+    feedEl.classList.add('list-group-item', 'border-0', 'border-end-0');
     feedEl.append(titleEl, descriptionEl);
     return feedEl;
   });
-  console.log(elements.feedsContainer);
-  elements.feedsContainer.append(...feedsElements);
+  elements.feedList.innerHTML = '';
+  elements.feedList.append(...feedsElements);
 };
 const renderPosts = (posts, elements, i18n) => {
   const postElements = posts.map((post) => {
+    elements.postsTitle.textContent = i18n.t('postTitle');
+    const liPosts = document.createElement('li');
+    liPosts.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     const postLink = document.createElement('a');
+    postLink.classList.add('fw-bold');
     postLink.textContent = post.title;
+    postLink.target = '_blank';
     postLink.href = post.link;
     const postButton = document.createElement('button');
-    postButton.classList.add('btn', 'btn-outline-primary');
-    postButton.textContent = 'Открыть';
-    const postEl = document.createElement('div');
-    postEl.append(postLink, postButton);
-    return postEl;
+    postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    postButton.textContent = i18n.t('buttonText');
+    liPosts.append(postLink, postButton);
+    return liPosts;
   });
-  elements.postsContainer.append(...postElements);
+  elements.postsList.innerHTML = '';
+  elements.postsList.append(...postElements);
 };
 
 const watch = (state, elements, i18n) =>
