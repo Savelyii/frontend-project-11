@@ -1,13 +1,13 @@
-const parserRss = (data) => {
+const parserRss = (xml) => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(data.data.contents, 'text/xml');
+  const doc = parser.parseFromString(xml.data.contents, 'text/xml');
   const parseError = doc.querySelector('parsererror');
   if (parseError) {
     const error = new Error('parseError');
     error.isParsingError = true;
     throw error;
   }
-  console.log(doc);
+
   const titleFeed = doc.querySelector('title');
   const descriptionFeed = doc.querySelector('description');
   const feedLink = doc.querySelector('link');
