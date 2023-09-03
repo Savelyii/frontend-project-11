@@ -15,12 +15,12 @@ i18nextInstance.init({
 });
 const validate = (url, urls) => yup.string().required().url('invalidUrl').notOneOf(urls, 'existsUrl').validate(url, urls);
 
-// const buildURL = (url) => {
-//   const newUrl = new URL('https://allorigins.hexlet.app/get');
-//   newUrl.searchParams.set('disableCache', true);
-//   newUrl.searchParams.set('disableCache', url);
-//   return newUrl;
-// };
+const buildURL = (url) => {
+  const newUrl = new URL('https://allorigins.hexlet.app/get');
+  newUrl.searchParams.set('disableCache', true);
+  newUrl.searchParams.set('url', url);
+  return newUrl;
+};
 
 const addFeed = (url, data, state) => {
   const { feed, posts } = data;
@@ -36,7 +36,7 @@ const addFeed = (url, data, state) => {
 
 const fetchRss = (url, state) => {
   axios
-    .get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${url}`)}`)
+    .get(buildURL(url))
     .then((response) => {
       const data = parserRss(response);
       addFeed(url, data, state);
@@ -89,7 +89,7 @@ const updatePosts = () => {
   const urls = watchedState.feeds.map((feed) => feed.url);
   const promises = urls.map((url) =>
     axios
-      .get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(`${url}`)}`)
+      .get(buildURL(url))
       .then((updatedResponse) => {
         const updatedParsedContent = parserRss(updatedResponse);
         const { posts: newPosts } = updatedParsedContent;
