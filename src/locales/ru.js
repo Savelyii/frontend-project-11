@@ -8,7 +8,7 @@ export default {
       closeBtn: 'Закрыть',
     },
     messages: {
-      success: 'Успешно добавлено',
+      success: 'RSS успешно загружен',
       invalidUrl: 'Невалидная ссылка',
       existsUrl: 'Ссылка уже добалена',
       parseError: 'Ресурс не содержит валидный RSS',
