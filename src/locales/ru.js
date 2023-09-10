@@ -9,8 +9,8 @@ export default {
     },
     messages: {
       success: 'RSS успешно загружен',
-      invalidUrl: 'Невалидная ссылка',
-      existsUrl: 'Ссылка уже добалена',
+      invalidUrl: 'Ссылка должна быть валидным URL',
+      existsUrl: 'RSS уже существует',
       parseError: 'Ресурс не содержит валидный RSS',
       networkError: 'Сетевая ошибка',
     },
