@@ -59,7 +59,6 @@ const renderPosts = (state, elements, i18n) => {
     postLink.href = post.link;
     const postButton = document.createElement('button');
     postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-    // postButton.setAttribute('data-post-id', post.id);
     postButton.setAttribute('data-post-id', post.id);
     postButton.setAttribute('data-bs-toggle', 'modal');
     postButton.setAttribute('data-bs-target', '#modal');
@@ -78,34 +77,35 @@ const renderModal = (state, elements, i18n) => {
     const modalTitle = elements.modal.querySelector('.modal-title');
     const modalBody = elements.modal.querySelector('.modal-body');
     const modalLink = elements.modal.querySelector('.open-article');
-    // const titleText = i18n.t('modalTitle');
-    // const descriptionText = i18n.t('modalDescription');
+    const readBtn = elements.modal.querySelector('.btn-read-full');
+    const closeBtn = elements.modal.querySelector('.btn-close-modal');
     modalTitle.textContent = post.title;
     modalBody.textContent = post.description;
+    readBtn.textContent = i18n.t('modal.readFull');
+    closeBtn.textContent = i18n.t('modal.closeBtn');
     modalLink.setAttribute('href', post.link);
   }
 };
 
-const watch = (state, elements, i18n) =>
-  onChange(state, (path, value) => {
-    switch (path) {
-      case 'form':
-        renderForm(value, elements, i18n);
-        break;
-      case 'feeds':
-        renderFeeds(value, elements, i18n);
-        break;
-      case 'posts':
-        renderPosts(state, elements, i18n);
-        break;
-      case 'postsIds':
-        renderPosts(state, elements, i18n);
-        break;
-      case 'modalId':
-        renderModal(state, elements, i18n);
-        break;
-      default:
-    }
-  });
+const watch = (state, elements, i18n) => onChange(state, (path, value) => {
+  switch (path) {
+    case 'form':
+      renderForm(value, elements, i18n);
+      break;
+    case 'feeds':
+      renderFeeds(value, elements, i18n);
+      break;
+    case 'posts':
+      renderPosts(state, elements, i18n);
+      break;
+    case 'postsIds':
+      renderPosts(state, elements, i18n);
+      break;
+    case 'modalId':
+      renderModal(state, elements, i18n);
+      break;
+    default:
+  }
+});
 
 export default watch;

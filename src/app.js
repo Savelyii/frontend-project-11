@@ -13,7 +13,11 @@ i18nextInstance.init({
     ru,
   },
 });
-const validate = (url, urls) => yup.string().required().url('invalidUrl').notOneOf(urls, 'existsUrl').validate(url, urls);
+const validate = (url, urls) => yup.string()
+  .required()
+  .url('invalidUrl')
+  .notOneOf(urls, 'existsUrl')
+  .validate(url, urls);
 
 const buildURL = (url) => {
   const newUrl = new URL('https://allorigins.hexlet.app/get');
@@ -41,7 +45,6 @@ const fetchRss = (url, state) => {
       const data = parserRss(response);
       addFeed(url, data, state);
       state.form = { status: 'success', message: 'success' };
-      state.urls.push(url);
     })
     .catch((err) => {
       if (err.isParsingError) {
@@ -81,30 +84,30 @@ const app = () => {
   elements.form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const { value } = elements.input;
-    validate(value, watchedState.urls).then((url) => {
-      // watchedState.form = { status: 'loading', message: 'loading' };
-      fetchRss(url, watchedState);
-    });
+    validate(value.trim(), watchedState.urls)
+      .then((url) => {
+        fetchRss(url, watchedState);
+      })
+      .catch((err) => {
+        watchedState.form = { status: 'failed', message: err.message };
+      });
   });
 };
 
 const updatePosts = () => {
   const urls = watchedState.feeds.map((feed) => feed.url);
-  const promises = urls.map((url) =>
-    axios
-      .get(buildURL(url))
-      .then((updatedResponse) => {
-        const updatedParsedContent = parserRss(updatedResponse);
-        const { posts: newPosts } = updatedParsedContent;
-        console.log(newPosts);
-        const addedPostsLinks = watchedState.posts.map((post) => post.link);
-        const addedNewPosts = newPosts.filter((post) => !addedPostsLinks.includes(post.link));
-        watchedState.posts = addedNewPosts.concat(watchedState.posts);
-      })
-      .catch((err) => {
-        throw err;
-      })
-  );
+  const promises = urls.map((url) => axios
+    .get(buildURL(url))
+    .then((updatedResponse) => {
+      const updatedParsedContent = parserRss(updatedResponse);
+      const { posts: newPosts } = updatedParsedContent;
+      const addedPostsLinks = watchedState.posts.map((post) => post.link);
+      const addedNewPosts = newPosts.filter((post) => !addedPostsLinks.includes(post.link));
+      watchedState.posts = addedNewPosts.concat(watchedState.posts);
+    })
+    .catch((err) => {
+      throw err;
+    }));
   Promise.all(promises).finally(() => setTimeout(() => updatePosts(), 5000));
 };
 updatePosts();
