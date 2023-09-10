@@ -61,6 +61,8 @@ const state = {
   urls: [],
   feeds: [],
   posts: [],
+  postsIds: [],
+  modalId: '',
 };
 
 const elements = {
@@ -71,6 +73,7 @@ const elements = {
   feedList: document.querySelector('.feed-list'),
   postsTitle: document.querySelector('.posts-title'),
   postsList: document.querySelector('.posts-list'),
+  modal: document.querySelector('.modal'),
 };
 const watchedState = watch(state, elements, i18nextInstance);
 
@@ -105,5 +108,12 @@ const updatePosts = () => {
   Promise.all(promises).finally(() => setTimeout(() => updatePosts(), 5000));
 };
 updatePosts();
+
+elements.postsList.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('btn')) {
+    watchedState.postsIds.push(evt.target.dataset.postId);
+    watchedState.modalId = evt.target.dataset.postId;
+  }
+});
 
 export default app;

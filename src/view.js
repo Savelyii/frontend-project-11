@@ -41,24 +41,49 @@ const renderFeeds = (feeds, elements, i18n) => {
   elements.feedList.innerHTML = '';
   elements.feedList.append(...feedsElements);
 };
-const renderPosts = (posts, elements, i18n) => {
+
+const renderPosts = (state, elements, i18n) => {
+  const { posts, postsIds } = state;
   const postElements = posts.map((post) => {
     elements.postsTitle.textContent = i18n.t('postTitle');
     const liPosts = document.createElement('li');
     liPosts.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     const postLink = document.createElement('a');
-    postLink.classList.add('fw-bold');
+    if (postsIds.includes(post.id)) {
+      postLink.classList.add('fw-normal');
+    } else {
+      postLink.classList.add('fw-bold');
+    }
     postLink.textContent = post.title;
     postLink.target = '_blank';
     postLink.href = post.link;
     const postButton = document.createElement('button');
     postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    // postButton.setAttribute('data-post-id', post.id);
+    postButton.setAttribute('data-post-id', post.id);
+    postButton.setAttribute('data-bs-toggle', 'modal');
+    postButton.setAttribute('data-bs-target', '#modal');
     postButton.textContent = i18n.t('buttonText');
     liPosts.append(postLink, postButton);
     return liPosts;
   });
   elements.postsList.innerHTML = '';
   elements.postsList.append(...postElements);
+};
+
+const renderModal = (state, elements, i18n) => {
+  const { posts, modalId } = state;
+  const post = posts.find((p) => p.id === modalId);
+  if (post) {
+    const modalTitle = elements.modal.querySelector('.modal-title');
+    const modalBody = elements.modal.querySelector('.modal-body');
+    const modalLink = elements.modal.querySelector('.open-article');
+    // const titleText = i18n.t('modalTitle');
+    // const descriptionText = i18n.t('modalDescription');
+    modalTitle.textContent = post.title;
+    modalBody.textContent = post.description;
+    modalLink.setAttribute('href', post.link);
+  }
 };
 
 const watch = (state, elements, i18n) =>
@@ -71,10 +96,15 @@ const watch = (state, elements, i18n) =>
         renderFeeds(value, elements, i18n);
         break;
       case 'posts':
-        renderPosts(value, elements, i18n);
+        renderPosts(state, elements, i18n);
+        break;
+      case 'postsIds':
+        renderPosts(state, elements, i18n);
+        break;
+      case 'modalId':
+        renderModal(state, elements, i18n);
         break;
       default:
-        console.log('Default');
     }
   });
 
