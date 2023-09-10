@@ -51,6 +51,7 @@ const renderPosts = (state, elements, i18n) => {
     const postLink = document.createElement('a');
     if (postsIds.includes(post.id)) {
       postLink.classList.add('fw-normal');
+      postLink.classList.add('link-secondary');
     } else {
       postLink.classList.add('fw-bold');
     }
