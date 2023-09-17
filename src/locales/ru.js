@@ -4,6 +4,7 @@ export default {
     headerLead: 'Начните читать RSS сегодня! Это легко, это красиво.',
     addButton: 'Добавить',
     labelText: 'ссылка RSS',
+    spanText: 'Пример: ',
     feedTitle: 'Фиды',
     postTitle: 'Посты',
     buttonText: 'Просмотр',

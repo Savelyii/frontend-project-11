@@ -74,6 +74,7 @@ const app = () => {
       headerLead: document.querySelector('[data-i18n="headerLead"]'),
       addButton: document.querySelector('[data-i18n="addButton"]'),
       labelText: document.querySelector('label[for="url-input"]'),
+      spanText: document.querySelector('[data-i18n="spanText"]'),
       form: document.querySelector('form'),
       feedback: document.querySelector('.feedback'),
       input: document.querySelector('.form-control'),
@@ -88,6 +89,7 @@ const app = () => {
     elements.headerLead.textContent = i18n('headerLead');
     elements.addButton.textContent = i18n('addButton');
     elements.labelText.textContent = i18n('labelText');
+    elements.spanText.textContent = i18n('spanText');
 
     const watchedState = watch(state, elements, i18nextInstance);
 
